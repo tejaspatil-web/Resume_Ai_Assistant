@@ -1,34 +1,151 @@
 # Resume AI Assistant
 
-A full-stack GenAI-powered Resume AI Assistant that answers questions about a professional resume using Retrieval-Augmented Generation (RAG), vector search, and LLM APIs.
+A full-stack Generative AI application that lets users interact with a professional resume through a conversational AI interface.
 
-The application provides a conversational chat interface where users can explore professional experience, technical skills, projects, AI experience, and other resume information.
+The assistant uses Retrieval-Augmented Generation (RAG), embeddings, vector search, reranking, and an LLM to retrieve relevant resume information and generate concise, context-aware responses.
+
+## 🌐 Live Demo
+
+**Application:** https://tejaspati-ai.web.app
+
+**GitHub Repository:** https://github.com/tejaspatil-web/Resume_Ai_Assistant
+
+---
 
 ## ✨ Features
 
-- 💬 Conversational AI resume assistant
-- 📄 Answers based only on the provided resume context
-- 🔎 Retrieval-Augmented Generation (RAG)
-- 🧠 Vector-based semantic search
-- 🔗 Project GitHub links when available in the resume context
-- 📝 Markdown-formatted AI responses
-- 📋 Copy AI responses
-- 🔄 Regenerate the latest response
-- ⚡ Responsive modern chat UI
-- 🪟 Glassmorphism-inspired interface
-- 🌐 External links open in a new browser tab
-- 🛡️ Prevents the AI from inventing resume information
+- Conversational AI-powered resume assistant
+- Resume-grounded responses using RAG
+- Semantic search using text embeddings
+- Vector database integration
+- Retrieval and reranking of relevant resume content
+- Markdown-formatted AI responses
+- Copy AI responses
+- Regenerate the latest AI response
+- Professional dark glassmorphism chat interface
+- Responsive UI for desktop and mobile
+- Clickable LinkedIn and GitHub profile/project links
+- External links open in a new browser tab
+- Prompt rules designed to prevent unsupported or fabricated resume information
 
-## 🏗️ Project Structure
+---
+
+## 🏗️ Architecture
 
 ```text
-resume-ai-assistant/
+                         ┌──────────────────────┐
+                         │        User          │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │    Angular 18 UI     │
+                         │  Resume Chat Client  │
+                         └──────────┬───────────┘
+                                    │ HTTP
+                                    ▼
+                         ┌──────────────────────┐
+                         │     Resume AI API    │
+                         │       Node.js        │
+                         └──────────┬───────────┘
+                                    │
+                         ┌──────────┴───────────┐
+                         ▼                      ▼
+                ┌─────────────────┐    ┌─────────────────┐
+                │ Query Embedding │    │ Resume Context  │
+                └────────┬────────┘    └─────────────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │  Vector Search  │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │    Reranking    │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │       LLM       │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌──────────────────────┐
+                │ Resume-based Answer  │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │   Angular Chat UI    │
+                └──────────────────────┘
+```
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+
+- Angular 18
+- TypeScript
+- HTML5
+- SCSS
+- Angular Signals
+- RxJS
+- Markdown rendering
+- Font Awesome
+
+### Backend
+
+- Node.js
+- REST API
+- LLM API integration
+- Retrieval-Augmented Generation (RAG)
+- Embedding generation
+- Vector search
+- Reranking
+
+### AI / Search
+
+- Large Language Models (LLMs)
+- Text embeddings
+- Vector database
+- Semantic similarity search
+- Reranking
+
+### Deployment
+
+- Angular UI: Firebase Hosting
+- Backend API: Cloud deployment
+
+---
+
+## 🔄 How It Works
+
+1. The user enters a question in the Angular chat interface.
+2. The API generates an embedding for the question.
+3. The vector database performs semantic similarity search against resume chunks.
+4. Relevant documents are retrieved.
+5. Retrieved documents are reranked based on relevance.
+6. The most relevant resume context is provided to the LLM.
+7. The LLM generates an answer using only the available resume context.
+8. The Angular application renders the response as formatted Markdown.
+
+The assistant is designed to remain grounded in the resume context and avoid unsupported assumptions.
+
+---
+
+## 📂 Project Structure
+
+```text
+Resume-Ai-Assistant/
 │
 ├── API/
+│   ├── config/
 │   ├── controllers/
 │   ├── routes/
 │   ├── services/
-│   ├── config/
 │   └── ...
 │
 ├── UI/
@@ -42,135 +159,114 @@ resume-ai-assistant/
 └── README.md
 ```
 
-## 🛠️ Tech Stack
+---
 
-### Frontend
+## 🚀 Getting Started
 
-- Angular 18
-- TypeScript
-- HTML
-- SCSS
-- Angular Signals
-- RxJS
-- Markdown rendering
+### Prerequisites
 
-### Backend
+- Node.js 20+
+- npm
+- Angular CLI
+- Configured LLM API
+- Configured vector database
 
-- Node.js
-- REST APIs
-- LLM API integration
-- Retrieval-Augmented Generation (RAG)
+### Clone the Repository
 
-### AI / Search
-
-- Large Language Models (LLMs)
-- Text embeddings
-- Vector database
-- Semantic similarity search
-- Reranking
-
-## 🔄 Application Flow
-
-```text
-User
-  │
-  ▼
-Angular UI
-  │
-  ▼
-Resume AI API
-  │
-  ├── Generate Query Embedding
-  │
-  ├── Vector Search
-  │
-  ├── Retrieve Relevant Resume Chunks
-  │
-  ├── Rerank Retrieved Content
-  │
-  ▼
-LLM
-  │
-  ▼
-Resume-based Answer
-  │
-  ▼
-Angular Chat UI
+```bash
+git clone https://github.com/tejaspatil-web/Resume_Ai_Assistant.git
+cd Resume_Ai_Assistant
 ```
 
-## 💬 Example Questions
+---
 
-You can ask questions such as:
-
-- Tell me about yourself.
-- Summarize your professional experience.
-- What technologies do you know?
-- Tell me about your projects.
-- What AI applications have you built?
-- What is your experience with Angular?
-- What is your experience with AG Grid?
-- Tell me about your automation experience.
-- What security-related work have you done?
-- Get me your GitHub and LinkedIn profile links.
-
-## 📁 API Setup
-
-Navigate to the API directory:
+## ⚙️ Backend Setup
 
 ```bash
 cd API
 npm install
 ```
 
-Create your environment configuration based on the environment variables required by the API.
+Configure the environment variables required by the API.
 
 Example:
 
 ```env
 PORT=3000
-
-# LLM configuration
 LLM_API_KEY=your_api_key
-
-# Vector database configuration
 VECTOR_DB_URL=your_vector_database_url
 VECTOR_DB_API_KEY=your_vector_database_key
 ```
 
-Start the API:
+Start the API using the script configured in `API/package.json`:
 
 ```bash
 npm start
 ```
 
-> Use the scripts defined in `API/package.json` if your project uses a different development/start command.
+For development, use the development script configured in the project:
 
-## 🎨 UI Setup
+```bash
+npm run dev
+```
 
-Navigate to the UI directory:
+---
+
+## 🎨 Frontend Setup
 
 ```bash
 cd UI
 npm install
-```
-
-Start the Angular application:
-
-```bash
 ng serve
 ```
 
-The application will normally be available at:
+Open:
 
 ```text
 http://localhost:4200
 ```
 
+---
+
+## 📦 Production Build
+
+Build the Angular application:
+
+```bash
+ng build --configuration production
+```
+
+Production files are generated under:
+
+```text
+UI/dist/resume-ai-assistant/browser
+```
+
+---
+
+## ☁️ Firebase Deployment
+
+The Angular UI is deployed using Firebase Hosting.
+
+From the UI directory:
+
+```bash
+cd UI
+ng build --configuration production
+firebase deploy --only hosting
+```
+
+Live application:
+
+https://tejaspati-ai.web.app
+
+---
+
 ## 🔐 Environment Variables
 
-Do not commit secrets or API keys to GitHub.
+Never commit API keys, database credentials, or other secrets to GitHub.
 
-Add environment files to `.gitignore`:
+Recommended `.gitignore` entries:
 
 ```gitignore
 .env
@@ -178,80 +274,134 @@ Add environment files to `.gitignore`:
 !.env.example
 ```
 
-Recommended approach:
-
-```text
-.env
-.env.example
-```
-
 Commit only `.env.example` with placeholder values.
-
-## 🧠 RAG Approach
-
-The assistant is designed to answer questions using resume information retrieved from the vector database.
-
-The general process is:
-
-1. User asks a question.
-2. The question is converted into an embedding.
-3. Similar resume chunks are retrieved from the vector database.
-4. Retrieved chunks are reranked for relevance.
-5. Relevant context is provided to the LLM.
-6. The LLM generates an answer using the retrieved resume context.
-7. The answer is rendered as Markdown in the Angular UI.
-
-The assistant is instructed not to invent information that is not present in the resume context.
-
-## 🔗 Project Links
-
-When a project has a GitHub repository available in the resume context, the assistant can provide the repository as a clickable Markdown link.
 
 Example:
 
-```markdown
-[View Project on GitHub](https://github.com/tejaspatil-web/Resume_Ai_Assistant)
+```env
+PORT=3000
+LLM_API_KEY=
+VECTOR_DB_URL=
+VECTOR_DB_API_KEY=
 ```
 
-Links are configured to open in a new browser tab.
+---
 
-## 🖥️ UI Highlights
+## 🧠 RAG Pipeline
 
-The UI is designed as a modern AI-chat experience with:
+```text
+User Question
+      ↓
+Query Embedding
+      ↓
+Vector Similarity Search
+      ↓
+Relevant Resume Chunks
+      ↓
+Reranking
+      ↓
+Context Selection
+      ↓
+LLM
+      ↓
+Grounded Resume Response
+```
+
+The assistant is instructed to:
+
+- Use only the retrieved resume context.
+- Avoid inventing professional experience, projects, skills, or other details.
+- Clearly state when requested information is unavailable.
+- Keep responses professional and concise.
+- Provide project GitHub links only when the corresponding link exists in the resume context.
+
+---
+
+## 💬 Example Queries
+
+- Tell me about yourself.
+- Summarize your professional experience.
+- What technologies do you know?
+- Tell me about your projects.
+- What AI applications have you built?
+- What is your Angular experience?
+- Tell me about your AG Grid experience.
+- What automation experience do you have?
+- What security-related work have you done?
+- What is your experience with Node.js?
+- Get me your GitHub and LinkedIn profile links.
+- Tell me about your Resume AI Assistant project.
+
+---
+
+## 🎨 User Interface
+
+The application provides a modern AI-chat experience with:
 
 - Dark theme
-- Glassmorphism effects
+- Glassmorphism-inspired design
 - Responsive chat layout
 - AI and user avatars
-- Markdown rendering
+- Markdown responses
 - Typing indicator
-- Message actions
+- Copy response action
+- Regenerate latest response
 - Smooth scrolling
-- Professional link styling
+- Professional hyperlink styling
+- External links opening in a new tab
 
-## 🚀 Future Improvements
+---
 
-Potential improvements include:
+## 🔗 Project Links
 
-- Streaming LLM responses
-- Conversation persistence
-- Authentication
-- Resume version management
-- Admin interface for updating resume content
-- Improved citation/source display
-- Advanced semantic and hybrid search
-- More sophisticated reranking
-- Analytics for frequently asked resume questions
+### Live Application
+
+https://tejaspati-ai.web.app
+
+### GitHub
+
+https://github.com/tejaspatil-web/Resume_Ai_Assistant
+
+### LinkedIn
+
+https://linkedin.com/in/-tejas-patil
+
+---
 
 ## 👨‍💻 Author
 
-**Tejas Patil**
+### Tejas Patil
 
-Software Developer with experience in scalable web application development, Angular, Node.js, ASP.NET Core, AG Grid, automation, and Generative AI applications.
+Software Developer with 3 years of experience in web application development, specializing in Angular, Node.js, ASP.NET Core, AG Grid, automation, and Generative AI applications.
 
-- LinkedIn: https://linkedin.com/in/-tejas-patil
-- GitHub: https://github.com/tejaspati-web
+**Areas of expertise:**
+
+- Angular and modern frontend architecture
+- Full-stack web development
+- REST API development
+- AG Grid
+- Generative AI
+- Retrieval-Augmented Generation
+- Vector databases
+- Test automation with Playwright
+- Enterprise application development
+
+---
+
+## 🚧 Future Enhancements
+
+- Streaming AI responses
+- Conversation persistence
+- Authentication and user management
+- Resume version management
+- Resume content administration
+- Improved source and citation display
+- Hybrid keyword and semantic search
+- Advanced reranking strategies
+- AI response analytics
+
+---
 
 ## 📄 License
 
-This project is intended for portfolio and demonstration purposes.
+This project is intended for portfolio, demonstration, and educational purposes.
