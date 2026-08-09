@@ -210,7 +210,7 @@ When a project has a GitHub repository available in the resume context, the assi
 Example:
 
 ```markdown
-[View Project on GitHub](https://github.com/username/repository)
+[View Project on GitHub](https://github.com/tejaspatil-web/Resume_Ai_Assistant)
 ```
 
 Links are configured to open in a new browser tab.
