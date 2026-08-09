@@ -1,16 +1,21 @@
 import express from "express";
-import cors from 'cors'
+import cors from 'cors';
+import dotenv from "dotenv";
 import documentRoutes from "./src/routes/document.routes.js";
 import resumeAiRoutes from "./src/routes/resume-ai.routes.js";
 
 const app = express();
 
+dotenv.config({ quiet:true });
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.text({ type: "text/plain", limit: "10mb" }));
 
 app.use(cors({
-    origin: "http://localhost:4200"
-}))
+  origin: process.env.APPLICATION_URL,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use("/api/documents", documentRoutes);
 
