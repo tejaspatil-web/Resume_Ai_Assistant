@@ -1,0 +1,127 @@
+<div class="app-container">
+  <!-- Glowing Background Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <!-- Professional Responsive Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo-badge">
+          <i class="fa-solid fa-code"></i>
+        </div>
+        <div class="header-titles">
+          <h1>Tejas <span class="badge-title">Software & AI Engineer</span></h1>
+          <p>AI Resume Chat Assistant</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="status-indicator">
+          <span class="pulse-dot"></span> Available for Hire
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Chat Body -->
+  <main class="chat-main" #scrollContainer>
+    <div class="chat-inner">
+
+      <!-- Welcome Section (Shown when no messages) -->
+      @if (messages().length === 0) {
+      <div class="welcome-section animate-fade-in">
+        <div class="welcome-greeting">
+          <div class="profile-avatar-large">
+            <span>T</span>
+          </div>
+          <h2>Hello, I'm Tejas <span class="wave">👋</span></h2>
+          <h3>Software & AI Solutions Architect</h3>
+          <p>Welcome to my AI Resume Chat Assistant. Chat with me below to explore my work history, technical stack, Angular expertise, and projects.</p>
+        </div>
+
+        <div class="suggestions-grid">
+          @for (suggestion of suggestions; track suggestion) {
+          <button class="suggestion-card" (click)="sendQuery(suggestion)">
+            <span>{{ suggestion }}</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Message History -->
+      @for (msg of messages(); track msg.id; let i = $index) {
+      <div class="message-wrapper" [ngClass]="msg.sender">
+        @if (msg.sender === 'ai') {
+        <div class="avatar ai-avatar">
+          <span>T</span>
+        </div>
+        }
+
+        <div class="message-bubble" [ngClass]="msg.sender">
+          @if (msg.sender === 'ai') {
+          <div class="markdown-content" [innerHTML]="msg.htmlContent"></div>
+          <div class="message-actions">
+            <button title="Copy text" (click)="copyToClipboard(msg)">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+            @if (i === messages().length - 1) {
+              <button
+                title="Regenerate response"
+                (click)="regenerateLastResponse()">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            }
+            <span class="timestamp">{{ msg.timestamp }}</span>
+          </div>
+          } @else {
+          <div class="user-text">{{ msg.text }}</div>
+          <div class="message-actions user-actions">
+            <span class="timestamp">{{ msg.timestamp }}</span>
+          </div>
+          }
+        </div>
+
+        @if (msg.sender === 'user') {
+        <div class="avatar user-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Typing Indicator / Shimmer -->
+      @if (isLoading()) {
+      <div class="message-wrapper ai animate-fade-in">
+        <div class="avatar ai-avatar">
+          <span>T</span>
+        </div>
+        <div class="message-bubble ai typing-bubble">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      }
+
+    </div>
+  </main>
+
+  <!-- Floating Chat Input Footer -->
+  <footer class="chat-footer">
+    <div class="input-container">
+      <textarea #chatTextarea rows="1" [ngModel]="inputText()" (ngModelChange)="inputText.set($event)"
+        (keydown)="onKeydown($event)" placeholder="Chat with Tejas's AI Resume Assistant..." autofocus></textarea>
+      <button class="send-btn" [disabled]="!inputText().trim() || isLoading()" (click)="sendQuery()"
+        title="Send message">
+        <i class="fa-solid fa-arrow-up"></i>
+      </button>
+    </div>
+    <div class="footer-disclaimer">
+      Tejas AI Resume Chat Assistant • Conversational Portfolio & Knowledge Base
+    </div>
+  </footer>
+</div>

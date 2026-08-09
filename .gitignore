@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Angular
+UI/.angular/
+UI/dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,24 @@
+{
+  "name": "genrative-ai-rag-system",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Tejas Patil",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/genai": "^2.16.0",
+    "@langchain/textsplitters": "^1.0.1",
+    "cohere-ai": "^8.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "openai": "^7.4.0",
+    "postgres": "^3.4.9"
+  }
+}
