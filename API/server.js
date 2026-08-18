@@ -1,6 +1,7 @@
 import express from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
+import healthRoutes from './src/routes/health.routes.js';
 import documentRoutes from "./src/routes/document.routes.js";
 import resumeAiRoutes from "./src/routes/resume-ai.routes.js";
 
@@ -16,6 +17,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use('/api/health', healthRoutes);
 
 app.use("/api/documents", documentRoutes);
 
