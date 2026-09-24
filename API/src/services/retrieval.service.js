@@ -8,10 +8,10 @@ export default async function retrieveDocuments(question) {
     const queryEmbedding = await generateEmbedding(question, "query");
 
     // Vector search
-    const documents = await searchSimilarDocuments(queryEmbedding, 10);
+    const documents = await searchSimilarDocuments(queryEmbedding, 5);
 
-    // Rerank retrieved documents
-    const rerankedDocuments = await rerankDocuments(question, documents, 5);
+    // Rerank retrieved documents - Temporarily disabled reranking
+    // const rerankedDocuments = await rerankDocuments(question, documents, 5);
 
     // Generate final answer using top 5 chunks
     const answer = await generateResumeAnswer(question, documents)
