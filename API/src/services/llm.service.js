@@ -9,51 +9,80 @@ export async function generateResumeAnswer(question, documents) {
         return "I could not find relevant information in the resume.";
     }
 
-    const context = documents.map((document, index) => {
-            return `### Resume Context ${index + 1} ${document.content}`;
-        }).join("\n\n");
+    // Keep all 5 retrieved documents
+    const context = documents
+        .map((document, index) => {
+            return `### Resume Context ${index + 1}\n${document.content}`;
+        })
+        .join("\n\n");
 
-     const prompt = `
-       You are a Resume AI Assistant.
+    const systemPrompt = `
+You are a Resume AI Assistant.
 
-        Answer the user's question using ONLY the resume context provided below.
+Rules:
+1. Answer using ONLY the provided resume context.
+2. Never invent skills, experience, projects, achievements, or URLs.
+3. If the answer is not available in the context, respond:
+   "This information is not available in the resume."
+4. Keep answers professional, clear, and concise.
+5. Use Markdown formatting when useful.
+6. Do not mention embeddings, vector databases, retrieval, or reranking.
+7. Include a GitHub project link only if the exact URL is present in the resume context.
+8. Do not generate or assume GitHub URLs.
+9. Answer only what the user asked.
+`;
 
-        Rules:
-        - Do not invent or assume information.
-        - If the answer is not available in the context, say:
-            "This information is not available in the resume."
-        - Keep the answer professional and concise.
-        - Use Markdown when it improves readability.
-        - Do not mention the retrieval process, embeddings, vector database, or reranking.
+    const userPrompt = `
+Resume Context:
+${context}
 
-        Project-specific rules:
-        - If the user asks about a project, provide the relevant project details from the resume.
-        - If a GitHub repository link for that project is available in the resume context, add it at the end of the project description.
-        - Format the GitHub repository as a clickable Markdown link:
-            [View Project on GitHub](https://github.com/tejaspatil-web?tab=repositories)
-        - Do not add a GitHub link if the project does not have a GitHub link in the resume context.
-        - Never invent or guess a GitHub repository URL.
-        - If multiple projects are requested, include the GitHub link for each project only when it is available.
+User Question:
+${question}
+`;
 
-        RESUME CONTEXT:
-        ${context}
+    const startTime = Date.now();
 
-        USER QUESTION:
-        ${question}`;
+    try {
+        const response = await openai.chat.completions.create({
+            model: "nvidia/nemotron-3-ultra-550b-a55b",
 
-    const response = await openai.chat.completions.create({
-        model: "nvidia/nemotron-3-ultra-550b-a55b",
-        messages: [
-            {
-                role: "user",
-                content: prompt
-            }
-        ],
-        temperature: 0.2,
-        top_p: 0.95,
-        max_tokens: 2048,
-        stream: false
-    });
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt
+                },
+                {
+                    role: "user",
+                    content: userPrompt
+                }
+            ],
 
-    return response.choices[0].message.content;
+            temperature: 0.2,
+            max_tokens: 512,
+            stream: false
+        });
+
+        const endTime = Date.now();
+
+        console.log(`[PERF] Nemotron API: ${endTime - startTime} ms`);
+
+        console.log(
+            `[PERF] Completion tokens: ${
+                response.usage?.completion_tokens ?? "N/A"
+            }`
+        );
+
+        return (
+            response.choices?.[0]?.message?.content?.trim() ||
+            "I could not generate an answer."
+        );
+
+    } catch (error) {
+        console.error(
+            `[ERROR] Nemotron API failed after ${Date.now() - startTime} ms:`,
+            error.message
+        );
+
+        throw error;
+    }
 }
