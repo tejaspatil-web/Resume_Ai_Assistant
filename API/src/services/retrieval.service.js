@@ -19,6 +19,6 @@ export default async function retrieveDocuments(question) {
     return {
         question,
         answer,
-        sources: rerankedDocuments
+        sources: documents
     };
 }
