@@ -9,7 +9,6 @@ export async function generateResumeAnswer(question, documents) {
         return "I could not find relevant information in the resume.";
     }
 
-    // Keep all 5 retrieved documents
     const context = documents
         .map((document, index) => {
             return `### Resume Context ${index + 1}\n${document.content}`;
