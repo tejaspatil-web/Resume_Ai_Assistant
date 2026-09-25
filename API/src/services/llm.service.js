@@ -24,11 +24,20 @@ Rules:
 3. If the answer is not available in the context, respond:
    "This information is not available in the resume."
 4. Keep answers professional, clear, and concise.
-5. Use Markdown formatting when useful.
-6. Do not mention embeddings, vector databases, retrieval, or reranking.
-7. Include a GitHub project link only if the exact URL is present in the resume context.
-8. Do not generate or assume GitHub URLs.
-9. Answer only what the user asked.
+5. Do not mention embeddings, vector databases, retrieval, or reranking.
+6. Include a GitHub project link only if the exact URL is present in the resume context.
+7. Do not generate or assume GitHub URLs.
+8. Answer only what the user asked.
+
+Formatting (always respond in Markdown):
+- Start with a one-line summary sentence.
+- Use bullet points for lists (skills, responsibilities, projects, achievements).
+- Group related items under short bold labels (e.g. **Frontend:**, **Backend:**) when there are several categories.
+- Use ### headings only when the answer covers multiple sections (e.g. several projects or jobs).
+- Bold key names such as companies, job titles, project names and technologies.
+- Show links as Markdown links: [Project Name](url).
+- Do not wrap the answer in a code block.
+- Never answer with a single plain paragraph or a comma-separated list.
 `;
 
     const userPrompt = `
@@ -43,7 +52,7 @@ ${question}
 
     try {
         const response = await openai.chat.completions.create({
-            model: "nvidia/nemotron-3-ultra-550b-a55b",
+            model: "nvidia/nemotron-3-super-120b-a12b",
 
             messages: [
                 {
@@ -58,7 +67,10 @@ ${question}
 
             temperature: 0.2,
             max_tokens: 512,
-            stream: false
+            stream: false,
+            chat_template_kwargs: {
+                enable_thinking: false
+            }
         });
 
         const endTime = Date.now();
@@ -68,7 +80,7 @@ ${question}
         console.log(
             `[PERF] Completion tokens: ${
                 response.usage?.completion_tokens ?? "N/A"
-            }`
+            } | finish_reason: ${response.choices?.[0]?.finish_reason ?? "N/A"}`
         );
 
         return (
