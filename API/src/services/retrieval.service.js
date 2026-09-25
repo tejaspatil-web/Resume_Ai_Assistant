@@ -15,21 +15,23 @@ export default async function retrieveDocuments(question) {
 
         // Vector search
         const documents = await timer.measure("vector_search", () =>
-            searchSimilarDocuments(queryEmbedding, 5)
+            searchSimilarDocuments(queryEmbedding, 10)
         );
 
-        // Rerank retrieved documents - Temporarily disabled reranking
-        // const rerankedDocuments = await rerankDocuments(question, documents, 5);
+        // Rerank retrieved documents
+        const rerankedDocuments = await timer.measure("rerank", () =>
+            rerankDocuments(question, documents, 5)
+        );
 
         // Generate final answer using top 5 chunks
         const answer = await timer.measure("llm_answer", () =>
-            generateResumeAnswer(question, documents)
+            generateResumeAnswer(question, rerankedDocuments)
         );
 
         return {
             question,
             answer,
-            sources: documents
+            sources: rerankedDocuments
         };
     } finally {
         timer.end();
