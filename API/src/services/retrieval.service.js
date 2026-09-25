@@ -2,23 +2,36 @@ import generateEmbedding from "./embedding.service.js";
 import { searchSimilarDocuments } from "../repositories/search.repository.js";
 import { rerankDocuments } from "./rerank.service.js";
 import { generateResumeAnswer } from "./llm.service.js"
+import { createTimer } from "../utils/performance-timer.util.js";
 
 export default async function retrieveDocuments(question) {
-    // Generate query embedding
-    const queryEmbedding = await generateEmbedding(question, "query");
+    const timer = createTimer("retrieveDocuments");
 
-    // Vector search
-    const documents = await searchSimilarDocuments(queryEmbedding, 5);
+    try {
+        // Generate query embedding
+        const queryEmbedding = await timer.measure("embedding", () =>
+            generateEmbedding(question, "query")
+        );
 
-    // Rerank retrieved documents - Temporarily disabled reranking
-    // const rerankedDocuments = await rerankDocuments(question, documents, 5);
+        // Vector search
+        const documents = await timer.measure("vector_search", () =>
+            searchSimilarDocuments(queryEmbedding, 5)
+        );
 
-    // Generate final answer using top 5 chunks
-    const answer = await generateResumeAnswer(question, documents)
+        // Rerank retrieved documents - Temporarily disabled reranking
+        // const rerankedDocuments = await rerankDocuments(question, documents, 5);
 
-    return {
-        question,
-        answer,
-        sources: documents
-    };
+        // Generate final answer using top 5 chunks
+        const answer = await timer.measure("llm_answer", () =>
+            generateResumeAnswer(question, documents)
+        );
+
+        return {
+            question,
+            answer,
+            sources: documents
+        };
+    } finally {
+        timer.end();
+    }
 }
