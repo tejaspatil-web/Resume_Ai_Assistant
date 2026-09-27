@@ -1,7 +1,7 @@
 # Keep application source languages visible
 *.ts linguist-detectable=true
 *.js linguist-detectable=true
+*.html linguist-detectable=true
 
 # Exclude styling from language statistics
 *.scss linguist-detectable=false
-*.html linguist-detectable=false
